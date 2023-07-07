@@ -13,5 +13,6 @@ export interface Comment {
 	content: string
 	votes: number
 	datePosted: string
+	depth: number
 	children: Comment[]
 }

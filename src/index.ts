@@ -79,8 +79,9 @@ function parseComment($, element: cheerio.Element): Comment {
 	const datePosted = $(
 		`#${articleId} > div > header > div > time.comment-posted-time`,
 	).attr("datetime") as string
+	const depth = parseInt($(`#${articleId}`).attr("data-comment-depth"), 10)
 
-	return { author, content, votes, datePosted, children }
+	return { author, content, votes, datePosted, children, depth }
 }
 
 app.listen(port, () => {
