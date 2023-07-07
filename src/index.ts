@@ -38,9 +38,7 @@ app.get("/post/:group/:postId", async (req: Request, res: Response) => {
 			id: postId,
 			title: $("h1").text(),
 			author: $(".topic-full-byline > a").text(),
-			content: turndownService
-				.turndown($(".topic-full-text").html() || "")
-				.replaceAll("\n", "  "),
+			content: turndownService.turndown($(".topic-full-text").html() || ""),
 			votes: parseInt($(".topic-voting-votes").text()) || 0,
 			datePosted:
 				($(".topic-full-byline > time").attr("datetime") as string) || "",
