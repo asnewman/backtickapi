@@ -66,9 +66,9 @@ function parseComment($, element: cheerio.Element): Comment {
 	}
 
 	const author: string = $(`#${articleId} > div > header > a.link-user`).text()
-	const content: string = $(`#${articleId} > div > div.comment-text`)
-		.text()
-		.trim()
+	const content: string = turndownService.turndown(
+		$(`#${articleId} > div > div.comment-text`).html() || "",
+	)
 	const rawVotes = $(`#${articleId} > div:nth-child(1) > menu:nth-child(3)`)
 		.text()
 		.trim()
