@@ -15,10 +15,11 @@ app.get("/", (req, res) => {
 	res.send("Hello World!")
 })
 
-app.get("/scrape/:postId", async (req: Request, res: Response) => {
+app.get("/post/:group/:postId", async (req: Request, res: Response) => {
 	try {
 		const postId = req.params.postId
-		const url = `https://tildes.net/~tech/${postId}` // replace with the actual URL
+		const group = req.params.group
+		const url = `https://tildes.net/~${group}/${postId}` // replace with the actual URL
 
 		const response = await axios.get(url)
 		const $ = cheerio.load(response.data)
@@ -28,7 +29,6 @@ app.get("/scrape/:postId", async (req: Request, res: Response) => {
 		const topLevelComments = $(
 			".topic-comments > .comment-tree > .comment-tree-item",
 		)
-		console.log("topLevelComments", topLevelComments.length)
 
 		topLevelComments.each(function (i, element) {
 			comments.push(parseComment($, element))
@@ -61,10 +61,6 @@ function parseComment($, element: cheerio.Element): Comment {
 	if (articleId) {
 		const childElements = $(`#${articleId} > ol > li`)
 
-		console.log(
-			`articleId: ${articleId} | childElements: ${childElements.length}`,
-		)
-
 		childElements.each(function (i, elem) {
 			children.push(parseComment($, elem))
 		})
@@ -74,11 +70,11 @@ function parseComment($, element: cheerio.Element): Comment {
 	const content: string = $(`#${articleId} > div > div.comment-text`)
 		.text()
 		.trim()
-	const rawVotes = $(`#${articleId} > div > menu > li:nth-child(1) > .button`)
-	// .text()
-	// .replace("Vote (", "")
-	// .replace(")", "")
-	console.log("rawVotes", rawVotes)
+	const rawVotes = $(`#${articleId} > div:nth-child(1) > menu:nth-child(3)`)
+		.text()
+		.trim()
+		.replace("Vote (", "")
+		.replace(")", "")
 	const votes = parseInt(rawVotes, 10)
 	const datePosted = $(
 		`#${articleId} > div > header > div > time.comment-posted-time`,
@@ -90,4 +86,3 @@ function parseComment($, element: cheerio.Element): Comment {
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}`)
 })
-// #comment-97ag > div > menu > li:nth-child(1) > button
