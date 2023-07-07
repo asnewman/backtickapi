@@ -42,7 +42,8 @@ app.get("/post/:group/:postId", async (req: Request, res: Response) => {
 				.turndown($(".topic-full-text").html() || "")
 				.replaceAll("\n", "  "),
 			votes: parseInt($(".topic-voting-votes").text()) || 0,
-			datePosted: $(".topic-full-byline > time").attr("datetime") as string,
+			datePosted:
+				($(".topic-full-byline > time").attr("datetime") as string) || "",
 			comments,
 		}
 
@@ -76,9 +77,10 @@ function parseComment($, element: cheerio.Element): Comment {
 		.replace("Vote (", "")
 		.replace(")", "")
 	const votes = parseInt(rawVotes, 10) || 0
-	const datePosted = $(
-		`#${articleId} > div > header > div > time.comment-posted-time`,
-	).attr("datetime") as string
+	const datePosted =
+		($(`#${articleId} > div > header > div > time.comment-posted-time`).attr(
+			"datetime",
+		) as string) || ""
 	const depth = parseInt($(`#${articleId}`).attr("data-comment-depth"), 10)
 
 	return { author, content, votes, datePosted, children, depth }
