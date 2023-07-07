@@ -41,7 +41,7 @@ app.get("/post/:group/:postId", async (req: Request, res: Response) => {
 			content: turndownService
 				.turndown($(".topic-full-text").html() || "")
 				.replaceAll("\n", "  "),
-			votes: parseInt($(".topic-voting-votes").text()),
+			votes: parseInt($(".topic-voting-votes").text()) || 0,
 			datePosted: $(".topic-full-byline > time").attr("datetime") as string,
 			comments,
 		}
@@ -75,7 +75,7 @@ function parseComment($, element: cheerio.Element): Comment {
 		.trim()
 		.replace("Vote (", "")
 		.replace(")", "")
-	const votes = parseInt(rawVotes, 10)
+	const votes = parseInt(rawVotes, 10) || 0
 	const datePosted = $(
 		`#${articleId} > div > header > div > time.comment-posted-time`,
 	).attr("datetime") as string
