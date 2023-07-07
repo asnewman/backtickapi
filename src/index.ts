@@ -35,14 +35,14 @@ app.get("/post/:group/:postId", async (req: Request, res: Response) => {
 		})
 
 		const post: Post = {
-			id: "",
+			id: postId,
 			title: $("h1").text(),
 			author: $(".topic-full-byline > a").text(),
 			content: turndownService
 				.turndown($(".topic-full-text").html() || "")
 				.replaceAll("\n", "  "),
 			votes: parseInt($(".topic-voting-votes").text()),
-			datePosted: "",
+			datePosted: $(".topic-full-byline > time").attr("datetime") as string,
 			comments,
 		}
 
