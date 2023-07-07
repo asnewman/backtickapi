@@ -36,6 +36,7 @@ app.get("/post/:group/:postId", async (req: Request, res: Response) => {
 
 		const post: Post = {
 			id: postId,
+			link: $(".topic-full-link > a").attr("href") || "",
 			title: $("h1").text(),
 			author: $(".topic-full-byline > a").text(),
 			content: turndownService.turndown($(".topic-full-text").html() || ""),
