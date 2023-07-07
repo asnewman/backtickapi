@@ -36,6 +36,7 @@ app.get("/post/:group/:postId", async (req: Request, res: Response) => {
 
 		const post: Post = {
 			id: postId,
+			link: $(".topic-full-link > a").attr("href") || "",
 			title: $("h1").text(),
 			author: $(".topic-full-byline > a").text(),
 			content: turndownService.turndown($(".topic-full-text").html() || ""),
@@ -65,6 +66,7 @@ function parseComment($, element: cheerio.Element): Comment {
 		})
 	}
 
+	const id: string = $(`#${articleId}`).attr("id").replace("comment-", "")
 	const author: string = $(`#${articleId} > div > header > a.link-user`).text()
 	const content: string = turndownService.turndown(
 		$(`#${articleId} > div > div.comment-text`).html() || "",
@@ -81,7 +83,7 @@ function parseComment($, element: cheerio.Element): Comment {
 		) as string) || ""
 	const depth = parseInt($(`#${articleId}`).attr("data-comment-depth"), 10)
 
-	return { author, content, votes, datePosted, children, depth }
+	return { id, author, content, votes, datePosted, children, depth }
 }
 
 app.listen(port, () => {

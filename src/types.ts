@@ -1,5 +1,6 @@
 export interface Post {
 	id: string
+	link: string
 	title: string
 	author: string
 	content: string
@@ -9,6 +10,7 @@ export interface Post {
 }
 
 export interface Comment {
+	id: string
 	author: string
 	content: string
 	votes: number
