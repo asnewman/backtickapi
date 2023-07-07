@@ -25,11 +25,13 @@ app.get("/scrape/:postId", async (req: Request, res: Response) => {
 
 		const comments: Comment[] = []
 
-		const topLevelComments = $(".comment-tree-item")
-		console.log(topLevelComments.length)
+		const topLevelComments = $(
+			".topic-comments > .comment-tree > .comment-tree-item",
+		)
+		console.log("topLevelComments", topLevelComments.length)
 
 		topLevelComments.each(function (i, element) {
-			comments.push(parseComment($(element)))
+			comments.push(parseComment($, element))
 		})
 
 		const post: Post = {
@@ -37,11 +39,11 @@ app.get("/scrape/:postId", async (req: Request, res: Response) => {
 			title: $("h1").text(),
 			author: $(".topic-full-byline > a").text(),
 			content: turndownService
-				.turndown($(".topic-full-text").html())
+				.turndown($(".topic-full-text").html() || "")
 				.replaceAll("\n", "  "),
 			votes: parseInt($(".topic-voting-votes").text()),
 			datePosted: "",
-			comments: [],
+			comments,
 		}
 
 		res.json(post)
@@ -51,27 +53,36 @@ app.get("/scrape/:postId", async (req: Request, res: Response) => {
 	}
 })
 
-function parseComment(element: cheerio.Cheerio<cheerio.Element>): Comment {
-	const author: string = element.find("a.link-user").text()
-	const content: string = element.find("div.comment-text").text().trim()
-	const votes = parseInt(
-		element
-			.find("button.btn-post-action")
-			.text()
-			.replace("Vote (", "")
-			.replace(")", ""),
-		10,
-	)
-	const datePosted = element
-		.find("time.comment-posted-time")
-		.attr("datetime") as string
+function parseComment($, element: cheerio.Element): Comment {
 	const children: Comment[] = []
 
-	element
-		.find("ol.comment-tree-replies li.comment-tree-item")
-		.each(function (i, elem) {
-			// children.push(parseComment(cheerio.load(elem.)))
+	const articleId = $(element).find("article").first().attr("id")
+
+	if (articleId) {
+		const childElements = $(`#${articleId} > ol > li`)
+
+		console.log(
+			`articleId: ${articleId} | childElements: ${childElements.length}`,
+		)
+
+		childElements.each(function (i, elem) {
+			children.push(parseComment($, elem))
 		})
+	}
+
+	const author: string = $(`#${articleId} > div > header > a.link-user`).text()
+	const content: string = $(`#${articleId} > div > div.comment-text`)
+		.text()
+		.trim()
+	const rawVotes = $(`#${articleId} > div > menu > li:nth-child(1) > .button`)
+	// .text()
+	// .replace("Vote (", "")
+	// .replace(")", "")
+	console.log("rawVotes", rawVotes)
+	const votes = parseInt(rawVotes, 10)
+	const datePosted = $(
+		`#${articleId} > div > header > div > time.comment-posted-time`,
+	).attr("datetime") as string
 
 	return { author, content, votes, datePosted, children }
 }
@@ -79,3 +90,4 @@ function parseComment(element: cheerio.Cheerio<cheerio.Element>): Comment {
 app.listen(port, () => {
 	console.log(`Example app listening on port ${port}`)
 })
+// #comment-97ag > div > menu > li:nth-child(1) > button
