@@ -17,10 +17,11 @@ app.get("/", (req, res) => {
 
 app.get("/post/:group/:postId", async (req: Request, res: Response) => {
 	try {
-		const postId = req.params.postId
-		const group = req.params.group
-		const url = `https://tildes.net/~${group}/${postId}` // replace with the actual URL
-
+		const { group, postId } = req.params
+		const { commentOrder } = req.query
+		const url = `https://tildes.net/~${group}/${postId}${
+			commentOrder ? `?comment_order=${commentOrder}` : ""
+		}`
 		const response = await axios.get(url)
 		const $ = cheerio.load(response.data)
 
