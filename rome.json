@@ -1,9 +1,0 @@
-{
-	"files": { "ignore": [".vscode/*", "dist/*", "node_modules/*"] },
-	"javascript": {
-		"formatter": {
-			"semicolons": "asNeeded"
-		}
-	},
-	"organizeImports": { "enabled": true }
-}
