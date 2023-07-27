@@ -32,6 +32,7 @@ router.get("/:group/:postId", async (req: Request, res: Response) => {
 
     const post: Topic = {
       id: postId,
+      group,
       link: $(".topic-full-link > a").attr("href") || "",
       title: $("h1").first().text(),
       author: $(".topic-full-byline > a").text(),

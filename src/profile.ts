@@ -24,8 +24,10 @@ router.get("/:username", async (req, res) => {
 
   const profile: Profile = {
     username,
-    comments,
-    topics
+    recentActivity: {
+      comments,
+      topics
+    }
   };
 
   return res.json(profile);

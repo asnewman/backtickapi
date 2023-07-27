@@ -29,6 +29,8 @@ export type ProfileTopic = Omit<Topic, "link" | "author" | "comments" | "content
 
 export interface Profile {
   username: string;
-  comments: ProfileComment[];
-  topics: ProfileTopic[];
+  recentActivity: {
+    comments: ProfileComment[];
+    topics: ProfileTopic[];
+  }
 }
