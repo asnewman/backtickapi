@@ -33,4 +33,5 @@ export interface Profile {
     comments: ProfileComment[];
     topics: ProfileTopic[];
   }
+  registered: string,
 }

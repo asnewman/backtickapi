@@ -27,7 +27,8 @@ router.get("/:username", async (req, res) => {
     recentActivity: {
       comments,
       topics
-    }
+    },
+    registered: $("#sidebar > dl > dd").text()
   };
 
   return res.json(profile);
