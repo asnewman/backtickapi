@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { Profile, ProfileComment } from "./types";
+import { Profile, ProfileComment, ProfileTopic } from "./types";
 import express from "express";
 import { gfm } from "turndown-plugin-gfm";
 import TurndownService from "turndown";
@@ -19,49 +19,77 @@ router.get("/:username", async (req, res) => {
   const comments: ProfileComment[] = [];
   const topics: ProfileTopic[] = [];
 
-  $("article.comment").each((_i, commentElement) => {
-    const id = $(commentElement).attr("id").replace("comment-", "");
-    const author = $(commentElement).find(".link-user").text();
-    const datePosted = $(commentElement).find("time").attr("datetime");
-    const votes =
-      parseInt(
-        $(commentElement)
-          .find("menu")
-          .first()
-          .text()
-          .replace("Vote ", "")
-          .replace("(", "")
-          .replace(")", ""),
-        10,
-      ) || 0;
-    const rawContent = $(commentElement).find(".comment-text").html();
-    const content = turndownService.turndown(rawContent);
-    const link = $(commentElement)
-      .find(".comment-nav-link")
-      .first()
-      .attr("href")
-    const group = link.split("/")[1]
-      .replace("~", "");
-    const postId = link.split("/")[2];
-
-    comments.push({
-      id,
-      group,
-      author,
-      content,
-      votes,
-      datePosted,
-      postId
-    });
-  });
+  getComments()
+  getTopics()
 
   const profile: Profile = {
-    username: "text",
+    username,
     comments,
     topics
   };
 
-  res.json(profile);
+  return res.json(profile);
+
+  function getComments() {
+    $("article.comment").each((_i, commentElement) => {
+      const id = $(commentElement).attr("id").replace("comment-", "");
+      const author = $(commentElement).find(".link-user").text();
+      const datePosted = $(commentElement).find("time").attr("datetime");
+      const votes =
+        parseInt(
+          $(commentElement)
+            .find("menu")
+            .first()
+            .text()
+            .replace("Vote ", "")
+            .replace("(", "")
+            .replace(")", ""),
+          10,
+        ) || 0;
+      const rawContent = $(commentElement).find(".comment-text").html();
+      const content = turndownService.turndown(rawContent);
+      const link = $(commentElement)
+        .find(".comment-nav-link")
+        .first()
+        .attr("href")
+      const group = link.split("/")[1]
+        .replace("~", "");
+      const postId = link.split("/")[2];
+
+      comments.push({
+        id,
+        group,
+        author,
+        content,
+        votes,
+        datePosted,
+        postId
+      });
+    });
+  }
+
+  function getTopics() {
+    $("article.topic").each((_, topicElement) => {
+      const title = $(topicElement).find(".topic-title > a").text()
+      const commentLink = $(topicElement).find(".topic-info-comments > a")
+        .attr("href")
+      const id = commentLink.split("/")[2]
+      const group = commentLink.split("/")[1]
+      const votes = parseInt(
+        $(topicElement).find(".topic-voting-votes").text(),
+        10
+      )
+      const datePosted = $(topicElement).find("time").attr("datetime")
+
+      topics.push({
+        id,
+        group,
+        votes,
+        datePosted,
+        title,
+      })
+    })
+  }
 });
 
 export default router;

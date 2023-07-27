@@ -1,5 +1,6 @@
 export interface Topic {
   id: string;
+  group: string;
   link: string;
   title: string;
   author: string;
@@ -24,10 +25,10 @@ export type ProfileComment = Omit<Comment, "depth" | "children"> & {
   group: string;
 };
 
-export type ProfileTopic = Omit<Topic, "author" | "comments">;
+export type ProfileTopic = Omit<Topic, "link" | "author" | "comments" | "content">;
 
 export interface Profile {
   username: string;
   comments: ProfileComment[];
-  topics: Topic[];
+  topics: ProfileTopic[];
 }
