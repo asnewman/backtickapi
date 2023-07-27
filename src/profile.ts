@@ -19,16 +19,16 @@ router.get("/:username", async (req, res) => {
   const comments: ProfileComment[] = [];
   const topics: ProfileTopic[] = [];
 
-  getComments()
-  getTopics()
+  getComments();
+  getTopics();
 
   const profile: Profile = {
     username,
     recentActivity: {
       comments,
-      topics
+      topics,
     },
-    registered: $("#sidebar > dl > dd").text()
+    registered: $("#sidebar > dl > dd").text(),
   };
 
   return res.json(profile);
@@ -54,9 +54,8 @@ router.get("/:username", async (req, res) => {
       const link = $(commentElement)
         .find(".comment-nav-link")
         .first()
-        .attr("href")
-      const group = link.split("/")[1]
-        .replace("~", "");
+        .attr("href");
+      const group = link.split("/")[1].replace("~", "");
       const postId = link.split("/")[2];
 
       comments.push({
@@ -66,23 +65,24 @@ router.get("/:username", async (req, res) => {
         content,
         votes,
         datePosted,
-        postId
+        postId,
       });
     });
   }
 
   function getTopics() {
     $("article.topic").each((_, topicElement) => {
-      const title = $(topicElement).find(".topic-title > a").text()
-      const commentLink = $(topicElement).find(".topic-info-comments > a")
-        .attr("href")
-      const id = commentLink.split("/")[2]
-      const group = commentLink.split("/")[1]
+      const title = $(topicElement).find(".topic-title > a").text();
+      const commentLink = $(topicElement)
+        .find(".topic-info-comments > a")
+        .attr("href");
+      const id = commentLink.split("/")[2];
+      const group = commentLink.split("/")[1];
       const votes = parseInt(
         $(topicElement).find(".topic-voting-votes").text(),
-        10
-      )
-      const datePosted = $(topicElement).find("time").attr("datetime")
+        10,
+      );
+      const datePosted = $(topicElement).find("time").attr("datetime");
 
       topics.push({
         id,
@@ -90,8 +90,8 @@ router.get("/:username", async (req, res) => {
         votes,
         datePosted,
         title,
-      })
-    })
+      });
+    });
   }
 });
 

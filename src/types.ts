@@ -25,13 +25,16 @@ export type ProfileComment = Omit<Comment, "depth" | "children"> & {
   group: string;
 };
 
-export type ProfileTopic = Omit<Topic, "link" | "author" | "comments" | "content">;
+export type ProfileTopic = Omit<
+  Topic,
+  "link" | "author" | "comments" | "content"
+>;
 
 export interface Profile {
   username: string;
   recentActivity: {
     comments: ProfileComment[];
     topics: ProfileTopic[];
-  }
-  registered: string,
+  };
+  registered: string;
 }
