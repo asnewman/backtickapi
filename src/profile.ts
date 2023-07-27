@@ -17,6 +17,7 @@ router.get("/:username", async (req, res) => {
   const $ = cheerio.load(response.data);
 
   const comments: ProfileComment[] = [];
+  const topics: ProfileTopic[] = [];
 
   $("article.comment").each((_i, commentElement) => {
     const id = $(commentElement).attr("id").replace("comment-", "");
@@ -35,12 +36,13 @@ router.get("/:username", async (req, res) => {
       ) || 0;
     const rawContent = $(commentElement).find(".comment-text").html();
     const content = turndownService.turndown(rawContent);
-    const group = $(commentElement)
+    const link = $(commentElement)
       .find(".comment-nav-link")
       .first()
       .attr("href")
-      .split("/")[1]
+    const group = link.split("/")[1]
       .replace("~", "");
+    const postId = link.split("/")[2];
 
     comments.push({
       id,
@@ -49,12 +51,14 @@ router.get("/:username", async (req, res) => {
       content,
       votes,
       datePosted,
+      postId
     });
   });
 
   const profile: Profile = {
     username: "text",
-    comments: comments,
+    comments,
+    topics
   };
 
   res.json(profile);

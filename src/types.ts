@@ -24,7 +24,10 @@ export type ProfileComment = Omit<Comment, "depth" | "children"> & {
   group: string;
 };
 
+export type ProfileTopic = Omit<Topic, "author" | "comments">;
+
 export interface Profile {
   username: string;
   comments: ProfileComment[];
+  topics: Topic[];
 }
