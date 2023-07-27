@@ -1,4 +1,4 @@
-export interface Post {
+export interface Topic {
   id: string;
   link: string;
   title: string;
@@ -20,7 +20,8 @@ export interface Comment {
 }
 
 export type ProfileComment = Omit<Comment, "depth" | "children"> & {
-  parentId: string;
+  postId: string;
+  group: string;
 };
 
 export interface Profile {

@@ -1,15 +1,16 @@
-import app from ".";
-import { Comment, Post } from "./types";
+import { Comment, Topic } from "./types";
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { Request, Response } from "express";
+import express, { Request, Response } from "express";
 import TurndownService from "turndown";
 import { gfm } from "turndown-plugin-gfm";
 
 const turndownService = new TurndownService();
 turndownService.use(gfm);
 
-app.get("/post/:group/:postId", async (req: Request, res: Response) => {
+const router = express.Router();
+
+router.get("/:group/:postId", async (req: Request, res: Response) => {
   try {
     const { group, postId } = req.params;
     const { commentOrder } = req.query;
@@ -22,14 +23,14 @@ app.get("/post/:group/:postId", async (req: Request, res: Response) => {
     const comments: Comment[] = [];
 
     const topLevelComments = $(
-      ".topic-comments > .comment-tree > .comment-tree-item"
+      ".topic-comments > .comment-tree > .comment-tree-item",
     );
 
     topLevelComments.each(function (i, element) {
       comments.push(parseComment($, element));
     });
 
-    const post: Post = {
+    const post: Topic = {
       id: postId,
       link: $(".topic-full-link > a").attr("href") || "",
       title: $("h1").first().text(),
@@ -64,7 +65,7 @@ function parseComment($, element: cheerio.Element): Comment {
   const id: string = $(`#${articleId}`).attr("id").replace("comment-", "");
   const author: string = $(`#${articleId} > div > header > a.link-user`).text();
   const content: string = turndownService.turndown(
-    $(`#${articleId} > div > div.comment-text`).html() || ""
+    $(`#${articleId} > div > div.comment-text`).html() || "",
   );
   const rawVotes = $(`#${articleId} > div:nth-child(1) > menu:nth-child(3)`)
     .text()
@@ -74,9 +75,11 @@ function parseComment($, element: cheerio.Element): Comment {
   const votes = parseInt(rawVotes, 10) || 0;
   const datePosted =
     ($(`#${articleId} > div > header > div > time.comment-posted-time`).attr(
-      "datetime"
+      "datetime",
     ) as string) || "";
   const depth = parseInt($(`#${articleId}`).attr("data-comment-depth"), 10);
 
   return { id, author, content, votes, datePosted, children, depth };
 }
+
+export default router;
