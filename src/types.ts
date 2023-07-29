@@ -1,3 +1,5 @@
+export type FeedTopic = Omit<Topic, "content" | "comments">;
+
 export interface Topic {
   id: string;
   group: string;
