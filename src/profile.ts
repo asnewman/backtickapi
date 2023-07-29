@@ -1,12 +1,14 @@
-import axios from "axios";
 import * as cheerio from "cheerio";
 import { Profile, ProfileComment, ProfileTopic } from "./types";
 import express from "express";
 import { gfm } from "turndown-plugin-gfm";
 import TurndownService from "turndown";
+import { getAxios, options } from "./http";
 
 const turndownService = new TurndownService();
 turndownService.use(gfm);
+
+const axios = getAxios()
 
 const router = express.Router();
 
@@ -15,7 +17,7 @@ router.get("/:username", async (req, res) => {
   const { htmlComments } = req.query;
   const showHtmlComments = htmlComments === "true";
   const url = `https://tildes.net/user/${username}`;
-  const response = await axios.get(url);
+  const response = await axios.get(url, options);
   const $ = cheerio.load(response.data);
 
   const comments: ProfileComment[] = [];

@@ -1,14 +1,16 @@
 import { Comment, Topic } from "./types";
-import axios from "axios";
 import * as cheerio from "cheerio";
 import express, { Request, Response } from "express";
 import TurndownService from "turndown";
 import { gfm } from "turndown-plugin-gfm";
+import { getAxios, options } from "./http";
 
 const turndownService = new TurndownService();
 turndownService.use(gfm);
 
 const router = express.Router();
+
+const axios = getAxios();
 
 router.get("/:group/:postId", async (req: Request, res: Response) => {
   try {
@@ -18,7 +20,7 @@ router.get("/:group/:postId", async (req: Request, res: Response) => {
     const url = `https://tildes.net/~${group}/${postId}${
       commentOrder ? `?comment_order=${commentOrder}` : ""
     }`;
-    const response = await axios.get(url);
+    const response = await axios.get(url, options);
     const $ = cheerio.load(response.data);
 
     const comments: Comment[] = [];
@@ -73,7 +75,9 @@ function parseComment(
   const id: string = $(`#${articleId}`).attr("id").replace("comment-", "");
   const author: string = $(`#${articleId} > div > header > a.link-user`).text();
   const content: string = showHtmlComments
-    ? $(`#${articleId} > div > div.comment-text`).html()?.replace("\n\n        ", "")
+    ? $(`#${articleId} > div > div.comment-text`)
+        .html()
+        ?.replace("\n\n        ", "")
     : turndownService.turndown(
         $(`#${articleId} > div > div.comment-text`).html() || "",
       );

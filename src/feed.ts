@@ -1,12 +1,14 @@
 import express from "express";
-import axios from "axios";
 import * as cheerio from "cheerio";
 import { FeedTopic } from "./types";
+import { getAxios, options } from "./http";
 
 const router = express.Router();
 
+const axios = getAxios();
+
 router.get("", async (_, res) => {
-  const response = await axios.get("https://tildes.net")
+  const response = await axios.get("https://tildes.net", options)
   const $ = cheerio.load(response.data);
 
   const feed: FeedTopic[] = []
