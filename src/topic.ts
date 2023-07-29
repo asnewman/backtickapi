@@ -13,7 +13,8 @@ const router = express.Router();
 router.get("/:group/:postId", async (req: Request, res: Response) => {
   try {
     const { group, postId } = req.params;
-    const { commentOrder } = req.query;
+    const { commentOrder, htmlComments } = req.query;
+    const showHtmlComments = htmlComments === "true";
     const url = `https://tildes.net/~${group}/${postId}${
       commentOrder ? `?comment_order=${commentOrder}` : ""
     }`;
@@ -27,7 +28,7 @@ router.get("/:group/:postId", async (req: Request, res: Response) => {
     );
 
     topLevelComments.each(function (i, element) {
-      comments.push(parseComment($, element));
+      comments.push(parseComment($, element, showHtmlComments));
     });
 
     const post: Topic = {
@@ -36,7 +37,9 @@ router.get("/:group/:postId", async (req: Request, res: Response) => {
       link: $(".topic-full-link > a").attr("href") || "",
       title: $("h1").first().text(),
       author: $(".topic-full-byline > a").text(),
-      content: turndownService.turndown($(".topic-full-text").html() || ""),
+      content: showHtmlComments
+        ? $(".topic-full-text").html()
+        : turndownService.turndown($(".topic-full-text").html() || ""),
       votes: parseInt($(".topic-voting-votes").text()) || 0,
       datePosted:
         ($(".topic-full-byline > time").attr("datetime") as string) || "",
@@ -50,7 +53,11 @@ router.get("/:group/:postId", async (req: Request, res: Response) => {
   }
 });
 
-function parseComment($, element: cheerio.Element): Comment {
+function parseComment(
+  $,
+  element: cheerio.Element,
+  showHtmlComments: boolean,
+): Comment {
   const children: Comment[] = [];
 
   const articleId = $(element).find("article").first().attr("id");
@@ -59,15 +66,17 @@ function parseComment($, element: cheerio.Element): Comment {
     const childElements = $(`#${articleId} > ol > li`);
 
     childElements.each(function (i, elem) {
-      children.push(parseComment($, elem));
+      children.push(parseComment($, elem, showHtmlComments));
     });
   }
 
   const id: string = $(`#${articleId}`).attr("id").replace("comment-", "");
   const author: string = $(`#${articleId} > div > header > a.link-user`).text();
-  const content: string = turndownService.turndown(
-    $(`#${articleId} > div > div.comment-text`).html() || "",
-  );
+  const content: string = showHtmlComments
+    ? $(`#${articleId} > div > div.comment-text`).html()?.replace("\n\n        ", "")
+    : turndownService.turndown(
+        $(`#${articleId} > div > div.comment-text`).html() || "",
+      );
   const rawVotes = $(`#${articleId} > div:nth-child(1) > menu:nth-child(3)`)
     .text()
     .trim()

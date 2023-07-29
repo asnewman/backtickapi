@@ -12,6 +12,8 @@ const router = express.Router();
 
 router.get("/:username", async (req, res) => {
   const { username } = req.params;
+  const { htmlComments } = req.query;
+  const showHtmlComments = htmlComments === "true";
   const url = `https://tildes.net/user/${username}`;
   const response = await axios.get(url);
   const $ = cheerio.load(response.data);
@@ -50,7 +52,9 @@ router.get("/:username", async (req, res) => {
           10,
         ) || 0;
       const rawContent = $(commentElement).find(".comment-text").html();
-      const content = turndownService.turndown(rawContent);
+      const content = showHtmlComments
+        ? rawContent?.replace("\n\n        ", "")
+        : turndownService.turndown(rawContent);
       const link = $(commentElement)
         .find(".comment-nav-link")
         .first()
