@@ -1,4 +1,9 @@
 export type FeedTopic = Omit<Topic, "content" | "comments">;
+export interface Group {
+  feed: Omit<FeedTopic, "group">[];
+  description: string;
+  subgroups?: string[];
+}
 
 export interface Topic {
   id: string;
