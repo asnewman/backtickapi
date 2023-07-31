@@ -44,4 +44,5 @@ export interface Profile {
     topics: ProfileTopic[];
   };
   registered: string;
+  bio: string;
 }

@@ -33,6 +33,7 @@ router.get("/:username", async (req, res) => {
       topics,
     },
     registered: $("#sidebar > dl > dd").text(),
+    bio: $(".user-bio > dd").text(),
   };
 
   return res.json(profile);
