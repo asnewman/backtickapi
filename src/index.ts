@@ -3,6 +3,7 @@ import topicRouter from "./topic";
 import profileRouter from "./profile";
 import feedRouter from "./feed";
 import groupRouter from "./group";
+import commentRouter from "./comment";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -16,6 +17,7 @@ app.use("/topic", topicRouter);
 app.use("/post", topicRouter);
 app.use("/feed", feedRouter);
 app.use("/group", groupRouter);
+app.use("/comment", commentRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
