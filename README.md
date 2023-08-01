@@ -9,7 +9,7 @@ Docs and usage found [here](https://rapidapi.com/asnewman/api/backtick-api).
 
 ## Development
 
-You will need [npm](https://pnpm.io/installation).
+You will need [pnpm](https://pnpm.io/installation).
 
 1. `pnpm i`
 2. Create environment file `env.ts` at the root
