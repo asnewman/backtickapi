@@ -14,7 +14,6 @@ const axios = getAxios();
 const router = express.Router();
 
 router.get("/:group/:topic/:id", async (req, res) => {
-  console.log(req.params)
   const { group, topic, id } = req.params;
   const { htmlComments } = req.query;
   const showHtmlComments = htmlComments === "true";
