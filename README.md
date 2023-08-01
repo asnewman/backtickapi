@@ -8,7 +8,7 @@ The Backtick API powers the [Backtick](https://tildes.net/~tildes/15xb/looking_f
 
 ## Usage
 
-Docs and usage found [here](https://rapidapi.com/asnewman/api/backtick-api).
+Docs and usage can be found [here](https://rapidapi.com/asnewman/api/backtick-api).
 
 ## Development
 
