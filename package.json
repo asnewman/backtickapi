@@ -2,7 +2,7 @@
   "name": "Backtick API",
   "version": "0.0.0",
   "author": "asnewman",
-  "license" "MIT",
+  "license": "MIT",
   "description": "Node.js & TypeScript starter",
   "engines": {
     "node": ">=18.11",
