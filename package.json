@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "author": "asnewman",
   "license": "MIT",
-  "description": "Node.js & TypeScript starter",
+  "description": "An unofficial https://tildes.net API",
   "engines": {
     "node": ">=18.11",
     "pnpm": ">=7.27"
