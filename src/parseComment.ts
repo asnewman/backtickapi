@@ -14,7 +14,6 @@ function parseComment(
   const children: Comment[] = [];
 
   const articleId = $(element).find("article").first().attr("id");
-  console.log(articleId)
 
   if (articleId) {
     const childElements = $(`#${articleId} > ol > li`);
