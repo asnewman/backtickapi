@@ -1,7 +1,7 @@
 # Backtick API
 
 <img src="https://github.com/asnewman/backtickapi/blob/main/backtickAPI.png?raw=true" alt="backtick logo" width="200"/>
-An unofficial Tildes API.
+An unofficial [tildes.net](https://tildes.net) API.
 
 ## Usage
 
