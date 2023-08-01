@@ -1,7 +1,8 @@
 {
-  "name": "node-ts",
+  "name": "Backtick API",
   "version": "0.0.0",
-  "author": "dayblox",
+  "author": "asnewman",
+  "license" "MIT",
   "description": "Node.js & TypeScript starter",
   "engines": {
     "node": ">=18.11",
