@@ -4,7 +4,7 @@
 An unofficial https://tildes.net API.
 
 ## Background
-The Backtick API powers the [Backtick](https://tildes.net/~tildes/15xb/looking_for_beta_testers_for_my_tildes_net_ios_app) mobile app, though it is built in a generic fashion to be available for any client to use. Currently, all endpoints scrape publicly available data and do not require any user credentials as inputs. Calls to Tildes are [cached](https://github.com/asnewman/backtickapi/blob/718e938ea50b172f7db3d2830ba856583e29a668/src/http.ts#L13) to prevent overloading of the Tildes server. If you have any questions, please check out the [Backtick Discord server](https://discord.gg/uKzFN9HRV). Contributions are welcomed and appreciated!
+The Backtick API powers the [Backtick](https://tildes.net/~tildes/15xb/looking_for_beta_testers_for_my_tildes_net_ios_app) mobile app, though it is built in a generic fashion to be available for any client to use. Currently, all endpoints scrape publicly available data and do not require any user credentials as inputs. Calls to Tildes are [cached](https://github.com/asnewman/backtickapi/blob/718e938ea50b172f7db3d2830ba856583e29a668/src/http.ts#L13) for a short period of time to prevent overloading the Tildes server. If you have any questions, please check out the [Backtick Discord server](https://discord.gg/uKzFN9HRV). Contributions are welcomed and appreciated!
 
 ## Usage
 
