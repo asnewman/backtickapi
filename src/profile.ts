@@ -41,7 +41,7 @@ router.get("/:username", async (req, res) => {
   function getComments() {
     $("article.comment").each((_i, commentElement) => {
       const id = $(commentElement).attr("id").replace("comment-", "");
-      const author = $(commentElement).find(".link-user").text();
+      const author = $(commentElement).find(".link-user").first().text();
       const datePosted = $(commentElement).find("time").attr("datetime");
       const votes =
         parseInt(
